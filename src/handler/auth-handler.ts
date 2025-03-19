@@ -1,7 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import User from "../models/auth-model";
+import { generateToken } from "../lib/token";
 
 export const register = expressAsyncHandler(
   async (req: Request, res: Response) => {
@@ -66,17 +66,16 @@ export const login = expressAsyncHandler(
   }
 );
 
-const generateToken = (id: string, res: Response) => {
-  if (!process.env.JWT) {
-    throw new Error("JWT secret is not defined");
+export const logout = expressAsyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      res.cookie("jwt", { maxAge: 0 });
+      res.status(200).json({
+        message: "Logged out successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   }
-  const token = jwt.sign({ id }, process.env.JWT, {
-    expiresIn: "1d",
-  });
-  res.cookie("jwt", token, {
-    maxAge: 15 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-  });
-};
+);
