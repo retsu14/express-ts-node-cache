@@ -20,6 +20,7 @@ app.use(
 connectDb();
 
 app.use("/api/auth", require("./routes/auth-routes"));
+app.use("/api/items", require("./routes/items-route"));
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
