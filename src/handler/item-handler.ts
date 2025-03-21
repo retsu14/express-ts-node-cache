@@ -40,6 +40,8 @@ export const getItemById = expressAsyncHandler(
 export const createItem = expressAsyncHandler(
   async (req: Request, res: Response) => {
     const { name, description, price, image, category, stock } = req.body;
+
+    console.log("user", req.user);
     const item = new Item({
       user: req.user ? req.user._id : null,
       name,

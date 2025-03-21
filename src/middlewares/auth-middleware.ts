@@ -7,23 +7,34 @@ import expressAsyncHandler from "express-async-handler";
 const protect = expressAsyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let token: string | undefined;
+      let token;
+
+      if (req.cookies && req.cookies.jwt) {
+        token = req.cookies.jwt;
+      }
 
       if (!token) {
         res.status(401).json({ message: "Not authorized, no token" });
       }
 
-      const decoded = jwt.verify(token as string, process.env.JWT as string);
+      try {
+        const decoded = jwt.verify(token as string, process.env.JWT as string);
 
-      if (!decoded) {
-        res.status(401).json({
-          message: "Unauthorized: Invalid Token",
-        });
+        if (!decoded) {
+          res.status(401).json({
+            message: "Unauthorized: Invalid Token",
+          });
+        }
+
+        req.user = await User.findById((decoded as jwt.JwtPayload).id).select(
+          "-password"
+        );
+
+        next();
+      } catch (error) {
+        console.error(error);
+        res.status(401).json({ message: "Not authorized, token failed" });
       }
-      req.user = await User.findById((decoded as jwt.JwtPayload).id).select(
-        "-password"
-      );
-      next();
     } catch (error: any) {
       console.error(error);
       res.status(401).json({ error: "Internal Server Error" });

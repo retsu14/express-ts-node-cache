@@ -1,8 +1,8 @@
-import { Request } from "express";
-import User from "../models/auth-model";
-
-declare module "express-serve-static-core" {
-  interface Request {
-    user?: any;
+import { IUser } from "../models/auth-model";
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUser;
+    }
   }
 }

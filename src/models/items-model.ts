@@ -1,6 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const itemSchema = new mongoose.Schema({
+export interface IItem extends Document {
+  user: mongoose.Schema.Types.ObjectId;
+  name: string;
+  description: string;
+  price: number;
+  image?: string;
+  category: string;
+  stock: number;
+}
+
+const itemSchema: Schema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -31,6 +41,6 @@ const itemSchema = new mongoose.Schema({
   },
 });
 
-const Item = mongoose.model("Item", itemSchema);
+const Item = mongoose.model<IItem>("Item", itemSchema);
 
 export default Item;

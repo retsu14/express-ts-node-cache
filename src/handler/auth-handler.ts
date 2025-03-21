@@ -59,7 +59,8 @@ export const login = expressAsyncHandler(
       });
     }
 
-    generateToken(user._id, res);
+    generateToken(user._id as string, res);
+
     res.status(200).json({
       message: "User logged in successfully",
     });
