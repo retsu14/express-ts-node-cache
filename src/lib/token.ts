@@ -3,7 +3,10 @@ import { Response } from "express";
 
 export const generateToken = (id: string, res: Response) => {
   if (!process.env.JWT) {
-    throw new Error("JWT secret is not defined");
+    res.status(400).json({
+      message: "JWT is not defined",
+    });
+    return;
   }
   const token = jwt.sign({ id }, process.env.JWT, {
     expiresIn: "1d",

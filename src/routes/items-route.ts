@@ -11,7 +11,7 @@ const router = Router();
 
 router.get("/", protect, getItems);
 router.get("/:id", protect, getItemById);
-router.post("/create", createItem);
+router.post("/create", protect, createItem);
 router.put("/update/:id", protect, updateItem);
 router.delete("/delete/:id", protect, deleteItem);
 

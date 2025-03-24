@@ -57,6 +57,7 @@ export const login = expressAsyncHandler(
       res.status(401).json({
         message: "Invalid credentials",
       });
+      return;
     }
 
     generateToken(user._id as string, res);

@@ -11,10 +11,9 @@ const protect = expressAsyncHandler(
 
       if (req.cookies && req.cookies.jwt) {
         token = req.cookies.jwt;
-      }
-
-      if (!token) {
+      } else {
         res.status(401).json({ message: "Not authorized, no token" });
+        return;
       }
 
       try {
